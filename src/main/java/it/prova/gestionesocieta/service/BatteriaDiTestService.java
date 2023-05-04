@@ -102,4 +102,30 @@ public class BatteriaDiTestService {
 		}
 		System.out.println("testRimozioneSocieta PASSED");
 	}
+	
+	
+	public void testModificaDipendente() {
+		System.out.println("testModificaDipendente INIZIO");
+		Long nowInMillisecondi = new Date().getTime();
+		Societa nuovaSocieta1 = new Societa("Societa " + nowInMillisecondi, "Via " + nowInMillisecondi, LocalDate.now());
+		societaService.inserisciNuovo(nuovaSocieta1);
+		if (nuovaSocieta1.getId() == null || nuovaSocieta1.getId() < 1) {
+			throw new RuntimeException("testModificaDipendente FALLITO: inserimento fallito");
+		}
+		Dipendente dipendenteDaModificare = new Dipendente("Mario", "Bianchi", LocalDate.of(2019,11,2), 30000, nuovaSocieta1);
+		dipendenteService.inserisciNuovo(dipendenteDaModificare);
+		if (dipendenteDaModificare.getId() == null || dipendenteDaModificare.getId() < 1) {
+			throw new RuntimeException("testModificaDipendente FALLITO: inserimento fallito");
+		}
+		String nuovoNome ="Mariottide";
+		LocalDate nuovaData = LocalDate.now();
+		dipendenteDaModificare.setNome(nuovoNome);
+		dipendenteDaModificare.setDataAssunzione(nuovaData);
+		dipendenteService.aggiorna(dipendenteDaModificare);
+		if (dipendenteDaModificare.getNome() != nuovoNome || dipendenteDaModificare.getDataAssunzione() != nuovaData) {
+			throw new RuntimeException("testModificaDipendente FALLITO: La modifica non corrisponde");
+		}
+		System.out.println("testModificaDipendente PASSED");
+	}
+	
 }
