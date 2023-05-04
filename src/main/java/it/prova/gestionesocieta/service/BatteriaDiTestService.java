@@ -2,10 +2,13 @@ package it.prova.gestionesocieta.service;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import it.prova.gestionesocieta.exception.SocietaConDipendentiException;
 import it.prova.gestionesocieta.model.Dipendente;
 import it.prova.gestionesocieta.model.Societa;
 
@@ -48,15 +51,55 @@ public class BatteriaDiTestService {
 		System.out.println("testInserimentoSocieta........OK");
 	}
 	
-	public void testRimozioneSocieta() {
+	
+	public void testFindByExampleSocieta() {
+		System.out.println("Inizio Test");
+		Long nowInMillisecondi = new Date().getTime();
+		Societa nuovaSocieta = new Societa("Societa example" + nowInMillisecondi, "Via " + nowInMillisecondi,
+				LocalDate.now());
+		societaService.inserisciNuovo(nuovaSocieta);
+		if (nuovaSocieta.getId() == null || nuovaSocieta.getId() < 1) {
+			throw new RuntimeException("testFindByExampleSocieta FALLITO: inserimento fallito");
+		}
+		String exampleRagioneSociale = "example";
+		Societa example = new Societa(exampleRagioneSociale, "Via", LocalDate.now());
+		List<Societa> listaDiEsempio1 = societaService.findByExample(example);
+		if (listaDiEsempio1.size() != 1) {
+			throw new RuntimeException("testFindByExampleSocieta FALLITO: le società non sono il numero previsto");
+		}
 		
-		societaService.rimuovi(1l);
-		
-		
+		System.out.println("testFindByExampleSocieta SUCCESS");
+
 	}
 	
+	public void testFindAll() {
+		
+		List<Societa> lista=
+		societaService.listAllSocieta();
+			for (Societa societaItem : lista) {
+				System.out.println(societaItem);
+			}
+	}
 	
-	
-	
-	
+	public void testRimozioneSocieta() {
+		System.out.println("testRimozioneSocieta INIZIO");
+		Long nowInMillisecondi = new Date().getTime();
+		Societa nuovaSocieta = new Societa("Societa " + nowInMillisecondi, "Via " + nowInMillisecondi, LocalDate.now());
+		societaService.inserisciNuovo(nuovaSocieta);
+		if (nuovaSocieta.getId() == null || nuovaSocieta.getId() < 1) {
+			throw new RuntimeException("testRimozioneSocieta FALLITO: inserimento fallito");
+		}
+		IntStream.range(1, 5).forEach(i -> {
+			Dipendente nuovoDipendente = new Dipendente("Mario" +i, "Rossi"+i,LocalDate.now(), 30000+(i*2), nuovaSocieta);
+			dipendenteService.inserisciNuovo(nuovoDipendente);;
+		});
+		
+		try {
+			societaService.delete(nuovaSocieta.getId());
+			throw new RuntimeException("testRimozioneSocieta FALLITO: non è stata l'eccezione custom");
+		} catch (SocietaConDipendentiException e) {
+			System.out.println("Catched Custom Exception");
+		}
+		System.out.println("testRimozioneSocieta PASSED");
+	}
 }

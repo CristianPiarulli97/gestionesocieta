@@ -47,6 +47,18 @@ public class Dipendente {
 		this.societa = societa;
 	}
 
+	
+
+	public Dipendente(String nome, String cognome, LocalDate dataAssunzione, Integer redditoAnnuoLordo,
+			Societa societa) {
+		super();
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataAssunzione = dataAssunzione;
+		this.redditoAnnuoLordo = redditoAnnuoLordo;
+		this.societa = societa;
+	}
+
 
 	public Dipendente(Long id, String nome, String cognome, LocalDate dataAssunzione, Integer redditoAnnuoLordo) {
 		super();
@@ -132,7 +144,7 @@ public class Dipendente {
 	@Override
 	public String toString() {
 		return "Dipendente [id=" + id + ", nome=" + nome + ", cognome=" + cognome + ", dataAssunzione=" + dataAssunzione
-				+ ", redditoAnnuoLordo=" + redditoAnnuoLordo + ", societa=" + societa + "]";
+				+ ", redditoAnnuoLordo=" + redditoAnnuoLordo + "]";
 	}
 
 	

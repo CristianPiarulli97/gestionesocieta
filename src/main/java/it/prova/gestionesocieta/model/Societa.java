@@ -105,7 +105,7 @@ public class Societa {
 	@Override
 	public String toString() {
 		return "Societa [id=" + id + ", ragioneSociale=" + ragioneSociale + ", indirizzo=" + indirizzo
-				+ ", dataFondazione=" + dataFondazione + ", dipendenti=" + dipendenti + "]";
+				+ ", dataFondazione=" + dataFondazione + "]";
 	}
 	
 	

@@ -17,5 +17,9 @@ public interface SocietaService {
 	public void rimuovi(Long id);
 
 	public List<Societa> findByExample(Societa example);
+
+	public Societa caricaSingolaSocietaEager(Long id);
+	
+	public void delete(Long idSocieta);
 	
 }

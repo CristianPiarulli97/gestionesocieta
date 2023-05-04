@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.prova.gestionesocieta.exception.SocietaConDipendentiException;
 import it.prova.gestionesocieta.model.Societa;
 import it.prova.gestionesocieta.repository.SocietaRepository;
 
@@ -50,12 +51,23 @@ public class SocietaServiceImpl implements SocietaService {
 
 	@Override	
 	public void rimuovi(Long id) {
-		societaRepository.deleteById(id);
-		
-		
+		societaRepository.deleteById(id);	
 		
 	}
+	
+	@Transactional
+	public void delete(Long idSocieta) {
+		Societa societaInstance = societaRepository.findByIdEager(idSocieta);
+		if (societaInstance.getDipendenti().size() > 0) {
+			throw new SocietaConDipendentiException("Attenzione! Stai rimuovendo una societa con dipendenti associati");
+		}
+		societaRepository.deleteById(idSocieta);
+	}
 
+	@Override
+	public Societa caricaSingolaSocietaEager(Long id) {
+		return societaRepository.findByIdEager(id);
+	}
 	
 	@Override
 	public List<Societa> findByExample(Societa example){
@@ -63,20 +75,20 @@ public class SocietaServiceImpl implements SocietaService {
 		Map<String, Object> paramaterMap = new HashMap<String, Object>();
 		List<String> whereClauses = new ArrayList<String>();
 
-		StringBuilder queryBuilder = new StringBuilder("select r from Societa r where r.id = r.id ");
+		StringBuilder queryBuilder = new StringBuilder("select s from Societa s where s.id = s.id ");
 
 		if (StringUtils.isNotEmpty(example.getRagioneSociale())) {
-			whereClauses.add(" r.ragionesociale  like :ragionesociale ");
-			paramaterMap.put("ragionesociale", "%" + example.getRagioneSociale() + "%");
+			whereClauses.add(" s.ragioneSociale  like :ragioneSociale ");
+			paramaterMap.put("ragioneSociale", "%" + example.getRagioneSociale() + "%");
 		}
 		if (StringUtils.isNotEmpty(example.getIndirizzo())) {
-			whereClauses.add(" r.indirizzo like :indirizzo ");
+			whereClauses.add(" s.indirizzo like :indirizzo ");
 			paramaterMap.put("indirizzo", "%" + example.getIndirizzo() + "%");
-	
 		}
+
 		if (example.getDataFondazione() != null) {
-			whereClauses.add("r.dataDiFondazione >= :dataDiFondazione ");
-			paramaterMap.put("dataDiFondazione", example.getDataFondazione());
+			whereClauses.add("s.dataFondazione >= :dataFondazione ");
+			paramaterMap.put("dataFondazione", example.getDataFondazione());
 		}
 
 		queryBuilder.append(!whereClauses.isEmpty() ? " and " : "");
