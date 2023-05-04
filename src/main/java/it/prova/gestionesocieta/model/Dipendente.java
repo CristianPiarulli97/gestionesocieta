@@ -28,6 +28,7 @@ public class Dipendente {
 	private LocalDate dataAssunzione;
 	@Column(name = "redditoannuolordo")
 	private Integer redditoAnnuoLordo;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "societa_id", nullable = false)
 	private Societa societa;
@@ -50,6 +51,17 @@ public class Dipendente {
 	public Dipendente(Long id, String nome, String cognome, LocalDate dataAssunzione, Integer redditoAnnuoLordo) {
 		super();
 		this.id = id;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataAssunzione = dataAssunzione;
+		this.redditoAnnuoLordo = redditoAnnuoLordo;
+	}
+	
+	
+
+
+	public Dipendente(String nome, String cognome, LocalDate dataAssunzione, Integer redditoAnnuoLordo) {
+		super();
 		this.nome = nome;
 		this.cognome = cognome;
 		this.dataAssunzione = dataAssunzione;

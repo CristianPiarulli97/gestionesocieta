@@ -7,6 +7,9 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -14,9 +17,11 @@ import javax.persistence.Table;
 @Table(name = "societa")
 public class Societa {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
-	@Column(name = "ragioneSociale")
+	@Column(name = "ragionesociale")
 	private String ragioneSociale;
 	@Column(name = "indirizzo")
 	private String indirizzo;
@@ -42,6 +47,15 @@ public class Societa {
 		this.indirizzo = indirizzo;
 		this.dataFondazione = dataFondazione;
 		this.dipendenti = dipendenti;
+	}
+
+	
+	
+	public Societa(String ragioneSociale, String indirizzo, LocalDate dataFondazione) {
+		super();
+		this.ragioneSociale = ragioneSociale;
+		this.indirizzo = indirizzo;
+		this.dataFondazione = dataFondazione;
 	}
 
 	public Societa() {
